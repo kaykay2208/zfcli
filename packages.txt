@@ -1,0 +1,4 @@
+atom-ide-ui@0.13.0
+autocomplete-java@1.2.7
+ide-java@0.9.1
+script@3.32.2

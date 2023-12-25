@@ -2,7 +2,40 @@ const readlineSync = require('readline-sync');
 const axios = require('axios');
 const fs =require('fs');
 const generateHeaders = require('./headersGenerator');
+const path = require('path');
 
+const downloadFunction = async (functionName, repositoryName, functionID, isProduction) => {
+  try {
+    
+    const customHeaders = await generateHeaders();
+
+    
+    const response = await axios.get(`https://cloud.localzoho.com/${portalname}/api/v2/function/download`, {
+      params: {
+        functionName,
+        repositoryName,
+        functionID,
+        isProduction
+      },
+      responseType: 'arraybuffer', 
+      headers: customHeaders
+    });
+
+    
+    const folderName = 'downloaded_functions';
+    if (!fs.existsSync(folderName)) {
+      fs.mkdirSync(folderName);
+    }
+
+    
+    const zipFileName = path.join(folderName, `${functionName}.zip`);
+    fs.writeFileSync(zipFileName, Buffer.from(response.data));
+
+    console.log(`${zipFileName} downloaded successfully.`);
+  } catch (error) {
+    console.error('Error downloading function:', error.message);
+  }
+};
 async function createFunction(orgID) {
     const storedJson = JSON.parse(fs.readFileSync('credentials.json', 'utf8'));
   try {
@@ -28,7 +61,7 @@ async function createFunction(orgID) {
     });
 
     console.log('Create Function Response:', response.data);
-    
+    downloadFunction(response.data.customfunction.function_name,`ZohoBooks_repo_${orgID}`,response.data.customfunction.drefunction_id,false);
 
   } catch (error) {
     console.error('Error creating function:', error.message);
@@ -38,11 +71,11 @@ async function createFunction(orgID) {
 
 async function updateFunction(orgID) {
   try {
-    // Similar implementation as createFunction, adjust as needed
+   
     
   } catch (error) {
     console.error('Error updating function:', error.message);
-    // Handle the error as needed
+    
   }
 }
 

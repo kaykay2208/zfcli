@@ -6,7 +6,7 @@ const config =require('../config');
 async function generateAccessToken(clientId, clientSecret, redirectUri, authorizationCode,env) {
   var tokenUrl = `https://accounts.${env}/oauth/v2/token`;
   const grantType = 'authorization_code';
-  const scope = 'ZohoBooks.fullaccess.all';
+  const scope = 'ZohoBooks.fullaccess.all,ZOHOCLOUD.functionapi.ALL';
 
   const postData = {
     code: authorizationCode,
@@ -48,7 +48,7 @@ async function generateGrant() {
   const redirectUri = readlineSync.question('Enter your Redirect URI: ');
 
   const authUrl = `https://accounts.${env}/oauth/v2/auth`;
-  const scope = 'ZohoBooks.fullaccess.all';
+  const scope = 'ZohoBooks.fullaccess.all,ZOHOCLOUD.functionapi.ALL';
   const responseType = 'code';
   const state = 'testing';
   const accessType = 'offline';
